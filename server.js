@@ -11,7 +11,7 @@ const port = 4000;
 // << db setup >>
 const db = require("./db");
 const dbName = "edkatestdb";
-const dbCollectionName = "Testmm";
+const dbCollectionName = "User";
 
 // << db init >>
 
@@ -34,7 +34,6 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
      //read one
      server.get("/tests/:id", (request, response) => {
         const testId = request.params.id;
-        console.log(request.params.id)
     
         dbCollection.findOne({ _id : testId}, (error, results) => {
             if (error) throw error;
