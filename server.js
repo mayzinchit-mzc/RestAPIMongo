@@ -24,7 +24,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
 
     // << db CRUD routes >>
     //read all documents
-    server.get("/tests", (request, response) => {
+    server.get("/getusers", (request, response) => {
         // return updated list
         dbCollection.find().toArray((error, result) => {
             if (error) throw error;
@@ -32,7 +32,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         });
     });
      //read one
-     server.get("/tests/:id", (request, response) => {
+     server.get("/getoneuser/:id", (request, response) => {
         const testId = request.params.id;
     
         dbCollection.findOne({ _id : testId}, (error, results) => {
@@ -43,8 +43,17 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         });
     });
     //create
-    server.post("/tests", (request, response) => {
-        const test = request.body;
+    server.post("/createuser", (request, response) => {
+       
+        console.log(request.query.name);
+        // response.json(request.query.name);
+        // response.json(request.query.address);
+        const test = {
+            name: request.query.name,
+            address: request.query.address
+        };
+        // const test = request.body;
+        // response.result(request.query.name);
         dbCollection.insertOne(test, (error, result) => { // callback of insertOne
             if (error) throw error;
             // return updated list
@@ -55,7 +64,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         });
     });
    //update
-   server.put("/tests/:id", (request, response) => {
+   server.put("/updateuser/:id", (request, response) => {
     const testId = request.params.id;
     const test = request.body;
     console.log("Editing test: ", testId, " to be ", test);
@@ -70,7 +79,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
     });
 
     //delete
-    server.delete("/tests/:id", (request, response) => {
+    server.delete("/deleteuser/:id", (request, response) => {
         const testId = request.params.id;
         console.log("Delete test with id: ", testId);
     
