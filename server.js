@@ -13,6 +13,7 @@ const db = require("./db");
 const dbName = "edkatestdb";
 const dbCollectionName = "User";
 
+
 // << db init >>
 
 db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallback
@@ -26,26 +27,36 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
     //read all documents
     server.get("/getusers", (request, response) => {
         // return updated list
-        dbCollection.find().toArray((error, result) => {
+        dbCollection.aggregate([
+            {$match:{name : {$exists : true}, address : {$exists : true}}},
+            {$project : {_id : 0}}
+            ]).toArray((error, result) => {
             if (error) throw error;
             response.json(result);
         });
     });
      //read one
-     server.get("/getoneuser/:id", (request, response) => {
-        const testId = request.params.id;
+     server.get("/getoneuser", (request, response) => {
+        // const testId = request.params.id;
+        const testId = request.query.name;
     
-        dbCollection.findOne({ _id : testId}, (error, results) => {
+        // dbCollection.findOne({ name : testId}, (error, results) => {
+        //     if (error) throw error;
+        //     // return one document
+        //     response.json(results);
+        // });
+        dbCollection.aggregate(
+            [
+              {$match:{name : {$exists : true}, address : {$exists : true}, _id : objectId("5f575145c58fcf23c44ffbe6")}}
+            ]
+          ).toArray((error, result) => {
             if (error) throw error;
-            // return one document
-            response.json(request.params);
-            // response.json(resulst);
+            response.json(result);
         });
     });
     //create
     server.post("/createuser", (request, response) => {
        
-        console.log(request.query.name);
         // response.json(request.query.name);
         // response.json(request.query.address);
         const test = {
