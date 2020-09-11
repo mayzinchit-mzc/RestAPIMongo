@@ -10,6 +10,7 @@ const port = 4000;
 
 // << db setup >>
 const db = require("./db");
+const { ObjectID } = require("mongodb");
 const dbName = "edkatestdb";
 const dbCollectionName = "User";
 
@@ -38,21 +39,21 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
      //read one
      server.get("/getoneuser", (request, response) => {
         // const testId = request.params.id;
-        const testId = request.query.name;
+        const testId = request.query.id;
     
-        // dbCollection.findOne({ name : testId}, (error, results) => {
-        //     if (error) throw error;
-        //     // return one document
-        //     response.json(results);
-        // });
-        dbCollection.aggregate(
-            [
-              {$match:{name : {$exists : true}, address : {$exists : true}, _id : objectId("5f575145c58fcf23c44ffbe6")}}
-            ]
-          ).toArray((error, result) => {
+        dbCollection.findOne(ObjectID(testId), (error, results) => {
             if (error) throw error;
-            response.json(result);
+            // return one document
+            response.json(results);
         });
+        // dbCollection.aggregate(
+        //     [
+        //       {$match:{name : {$exists : true}, address : {$exists : true}, _id : objectId("5f575145c58fcf23c44ffbe6")}}
+        //     ]
+        //   ).toArray((error, result) => {
+        //     if (error) throw error;
+        //     response.json(result);
+        // });
     });
     //create
     server.post("/createuser", (request, response) => {
@@ -61,7 +62,9 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         // response.json(request.query.address);
         const test = {
             name: request.query.name,
-            address: request.query.address
+            address: request.query.address,
+            age: request.query.age,
+            gender: request.query.gender
         };
         // const test = request.body;
         // response.result(request.query.name);
@@ -75,8 +78,8 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         });
     });
    //update
-   server.put("/updateuser/:id", (request, response) => {
-    const testId = request.params.id;
+   server.put("/updateuser", (request, response) => {
+    const testId = request.query.name;
     const test = request.body;
     console.log("Editing test: ", testId, " to be ", test);
 
@@ -90,11 +93,11 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
     });
 
     //delete
-    server.delete("/deleteuser/:id", (request, response) => {
-        const testId = request.params.id;
+    server.delete("/deleteuser", (request, response) => {
+        const testId = request.query.id;
         console.log("Delete test with id: ", testId);
     
-        dbCollection.deleteOne({ id: testId }, function(error, result) {
+        dbCollection.deleteOne({ id: Object(testId) }, function(error, result) {
             if (error) throw error;
             // send back entire updated list after successful request
             dbCollection.find().toArray(function(_error, _result) {
