@@ -28,10 +28,14 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
     //read all documents
     server.get("/getusers", (request, response) => {
         // return updated list
-        dbCollection.aggregate([
-            {$match:{name : {$exists : true}, address : {$exists : true}}},
-            {$project : {_id : 0}}
-            ]).toArray((error, result) => {
+        // dbCollection.aggregate([
+        //     {$match:{name : {$exists : true}, address : {$exists : true}}},
+        //     {$project : {_id : 0}}
+        //     ]).toArray((error, result) => {
+        //     if (error) throw error;
+        //     response.json(result);
+        // });
+        dbCollection.find().toArray((error, result) => {
             if (error) throw error;
             response.json(result);
         });
