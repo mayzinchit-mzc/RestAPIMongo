@@ -73,11 +73,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         
         dbCollection.updateOne({ userId: testId }, { $set: test }, (error, result) => {
             if (error) throw error;
-            // send back entire updated list, to make sure frontend data is up-to-date
-            dbCollection.find().toArray((_error, _result) =>{
-                if (_error) throw _error;
-                response.json(_result);
-            });
+            response.send(json.stringify({"status": 200, "error": null}));
         });
     });
     // delete
