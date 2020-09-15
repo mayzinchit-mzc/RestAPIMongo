@@ -57,11 +57,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
             };
             dbCollection.insertOne(test, (error, result) => { // callback of insertOne
                 if (error) throw error;
-                // return updated list
-                dbCollection.find().toArray((_error, _result) => { // callback of find
-                    if (_error) throw _error;
-                    response.json(_result);
-                });
+                response.send(json.stringify({"status": 200, "error": null}));
             });
         });
     });
@@ -83,11 +79,7 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
 
         dbCollection.deleteOne({ userId : myquery }, function(error, result) {
             if (error) throw error;
-            // send back entire updated list after successful request
-            dbCollection.find().toArray(function(_error, _result) {
-                if (_error) throw _error;
-                response.json(_result);
-            });
+            response.send(json.stringify({"status": 200, "error": null}));
         });
     });
 }, function(err) { // failureCallback
