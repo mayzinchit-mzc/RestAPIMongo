@@ -48,7 +48,6 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
         var lastID = 0;
         dbCollection.find().count({}, function(error, result){
             lastID = result;
-            console.log("lastID ", lastID);
             const test = {
                 name: request.query.name,
                 address: request.query.address,
@@ -69,22 +68,17 @@ db.initialize(dbName, dbCollectionName, function(dbCollection) { // successCallb
     // update
     server.put("/updateuser", (request, response) => {
         const testId = request.query.userId;
-        const test = {
-            name: request.query.name,
-            address: request.query.address,
-            age: request.query.age,
-            gender: request.query.gender,
-            userId: request.query.userId
-        };
+        const test = request.query;
+        console.log("test ", test);
         
-        // dbCollection.updateOne({ id: testId }, { $set: test }, (error, result) => {
-        //     if (error) throw error;
-        //     // send back entire updated list, to make sure frontend data is up-to-date
-        //     dbCollection.find().toArray((_error, _result) =>{
-        //         if (_error) throw _error;
-        //         response.json(_result);
-        //     });
-        // });
+        dbCollection.updateOne({ userId: testId }, { $set: test }, (error, result) => {
+            if (error) throw error;
+            // send back entire updated list, to make sure frontend data is up-to-date
+            dbCollection.find().toArray((_error, _result) =>{
+                if (_error) throw _error;
+                response.json(_result);
+            });
+        });
     });
     // delete
     server.delete("/deleteuser", (request, response) => {
