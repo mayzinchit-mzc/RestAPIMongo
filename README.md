@@ -13,6 +13,8 @@ Build REST API with Node.js, MongoDB
 	
 	npm install body-parser
 	
+	npm install mongobd
+	
 //If mongoose error was found, remove the line in db.js
 
 	const mongoose = require("mongoose");	OR	npm install mongoose
